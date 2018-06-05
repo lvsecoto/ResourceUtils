@@ -29,16 +29,30 @@ class ShapeUtilsFragment : Fragment() {
         )
 
         mBinding.apply {
-            solidColor.setOnSeekBarChangeListener(onChangeListener)
-            strokeColor.setOnSeekBarChangeListener(onChangeListener)
-            strokeWidth.setOnSeekBarChangeListener(onChangeListener)
-            cornersRadius.setOnSeekBarChangeListener(onChangeListener)
+            solidColor.setOnSeekBarChangeListener(onShapeConfigChangeListener)
+            strokeColor.setOnSeekBarChangeListener(onShapeConfigChangeListener)
+            strokeWidth.setOnSeekBarChangeListener(onShapeConfigChangeListener)
+            cornersRadius.setOnSeekBarChangeListener(onShapeConfigChangeListener)
+
+            startColor.setOnSeekBarChangeListener(onGradientShapeConfigChangeListener)
+            endColor.setOnSeekBarChangeListener(onGradientShapeConfigChangeListener)
+            angle.setOnSeekBarChangeListener(onGradientShapeConfigChangeListener)
         }
 
         return mBinding.root
     }
 
-    private val onChangeListener: SeekBar.OnSeekBarChangeListener =
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        onShapeConfigChangeListener.onProgressChanged(null, 0, false)
+        onGradientShapeConfigChangeListener.onProgressChanged(null, 0, false)
+    }
+
+    private val onShapeConfigChangeListener =
         object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: SeekBar?,
@@ -56,12 +70,33 @@ class ShapeUtilsFragment : Fragment() {
                 }
             }
 
-            private fun getColor(h: Int) =
-                Color.HSVToColor(arrayOf(h.toFloat(), 1f, 1f).toFloatArray())
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        }
+
+    private val onGradientShapeConfigChangeListener =
+        object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                mBinding.apply {
+                    gradientShape.setImageDrawable(
+                        ShapeDrawableUtils.Builder(context)
+                            .startColor(getColor(startColor.progress))
+                            .endColor(getColor(endColor.progress))
+                            .angle(getAngle())
+                            .corner(cornersRadius.progress)
+                            .build()
+                    )
+                }
+            }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         }
+
+    private fun getColor(h: Int) =
+        Color.HSVToColor(arrayOf(h.toFloat(), 1f, 1f).toFloatArray())
+
+    private fun getAngle(): Int = mBinding.angle.progress * 45
 
     companion object {
         fun create(): ShapeUtilsFragment {
