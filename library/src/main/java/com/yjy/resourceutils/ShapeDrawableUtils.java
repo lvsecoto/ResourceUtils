@@ -8,6 +8,10 @@ import static android.graphics.drawable.GradientDrawable.Orientation;
 
 public class ShapeDrawableUtils {
 
+    public static Builder builder(Context context) {
+        return new Builder(context);
+    }
+
     private static int dpToPx(Context context, int dp) {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float)dp * density);
