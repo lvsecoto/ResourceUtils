@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/lvsecoto/ResourceUtils.svg)](https://jitpack.io/#lvsecoto/ResourceUtils)
+
 # Resource Utils
 
 ## About
