@@ -37,8 +37,8 @@ ShapeDrawableUtils
             .solid(Color.White)
             .stroke(16, Color.Red)
             .corner(4)
-            .startColor(Color.White)//gradient end color
-            .endColor(Color.Red)    //gradient start color
+            .startColor(Color.White)//gradient start color
+            .endColor(Color.Red)    //gradient end color
             .angle(45)              //must be multiple of 45
             .build()
 ```
